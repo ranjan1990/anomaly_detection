@@ -1,6 +1,10 @@
 import cv2
 import numpy as np
 from matplotlib import pyplot as plt
+
+MAX_KEY_POINT=400;
+
+
 def get_name(i):
     if(i<10):
         return("00"+str(i)+".tif");
@@ -49,7 +53,7 @@ def display_keypoint_in_image(frame,kp):
 
 def display_image(frame):
     cv2.imshow("frame",frame)
-    cv2.waitKey(0);
+    cv2.waitKey(1);
 
 
 """ 
@@ -59,24 +63,55 @@ def display_image(frame):
     sift = cv2.xfeatures2d.SIFT_create()
     kp = sift.detect(frame1,M)
 """   
+def key_cor(kp1,ind1,kp2,ind2):
+    print kp1[ind1].pt
+    #print kp2[ind2].pt
+    
 
-def store_Traj(KP_DES):
-    MAX_KEY_POINT=400;
-    match_index=np.zeros((MAX_KEY_POINT,len(KP_DES)),dtype=np.int8)
+def get_traj_matrix(KP_DES):
+
+    match_index=np.zeros((MAX_KEY_POINT,len(KP_DES)),dtype=np.int32)
+    
+    #here I have used brute force method
     bf = cv2.BFMatcher(cv2.NORM_L1, crossCheck=True)
+    
+    #match key point two  consucative frame
     for i in range(len(KP_DES)-1):
         matches = bf.match(KP_DES[i][1],KP_DES[i+1][1])
-            
+        matches = sorted(matches,key = lambda x:x.distance)
         
+        for m in matches:
+            #match_index[m.trainIdx][i]=m.queryIdx
+            #for all matches storre it into matrix ith col indicates the 
+            #if(m.distance<100):
+            match_index[m.queryIdx][i]=m.trainIdx
+    return match_index
 
 
-for i in range(1,199,2):
+def traverse_matrix(mat,KP_DES):
+    for i in range(MAX_KEY_POINT):
+        k=i;
+        if(mat[i][0]!=0):
+            print"---------------"
+        for j in range(len(KP_DES)-1):
+            if(mat[k][j]!=0):
+                key_cor(KP_DES[j][0],k,KP_DES[j+1][0],mat[k][j])
+                k=mat[k][j]
+            else:
+                break;
+
+
+
+
+
+
+for i in range(1,199,1500):
     
     #frame stacked over here
     FRAME=[]
     KP_DES=[]       #this is key point descriptor contains (kp,des) for each frame 
     #considering 3 frame at a time
-    for fno in range(i,i+3):
+    for fno in range(i,i+100):
         file_name=get_name(fno)
         frame=cv2.imread("Test001/"+file_name);
         FRAME.append(frame);
@@ -85,21 +120,19 @@ for i in range(1,199,2):
         #compute descriptor and keypoint
         kp,des = sift.detectAndCompute(frame,None)
         KP_DES.append((kp,des));
-        display_keypoint_in_image(frame,KP_DES[fno-i][0])
-  
-
+        #display_keypoint_in_image(frame,KP_DES[fno-i][0])
+          
+        
     
-    #match key point
-    #here I have used brute force method
-    bf = cv2.BFMatcher(cv2.NORM_L1, crossCheck=True)
-    matches = bf.match(KP_DES[0][1],KP_DES[1][1])
-    matches = sorted(matches,key = lambda x:x.distance)
-    
+    mat=get_traj_matrix(KP_DES)        #get trajectory matrix from Key point and descriptor by matching
+    traverse_matrix(mat,KP_DES) 
 
 
-    frame0 = cv2.drawMatches(FRAME[0],KP_DES[0][0],FRAME[1],KP_DES[1][0],matches[-50:-1],None,flags=2)
-    #plt.imshow(frame0),plt.show(1)
-    display_image(frame0);
+
+
+#    traverse_matrix(mat,KP_DES)
+
+
     
 
 
