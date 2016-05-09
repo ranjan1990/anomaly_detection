@@ -1,5 +1,6 @@
 import cv2
 import numpy as np
+from matplotlib import pyplot as plt
 def get_name(i):
     if(i<10):
         return("00"+str(i)+".tif");
@@ -46,28 +47,67 @@ def display_keypoint_in_image(frame,kp):
     cv2.waitKey(1);
 
 
+def display_image(frame):
+    cv2.imshow("frame",frame)
+    cv2.waitKey(0);
 
 
-
-
-for i in range(1,200):
-    file_name=get_name(i)
-    print file_name
-    frame1=cv2.imread("Test001/"+file_name);
-    frame_dis=cv2.imread("Test001/"+file_name);
-    """ 
+""" 
     #detect key point wih mask
     M=np.zeros(frame1.shape[:-1],dtype=np.uint8)
     Mask_with_one(M,(5,5),(i1,j1))   
     sift = cv2.xfeatures2d.SIFT_create()
     kp = sift.detect(frame1,M)
-    """   
-       
-    sift = cv2.xfeatures2d.SIFT_create()
-    kp = sift.detect(frame1,None)
+"""   
+
+def store_Traj(KP_DES):
+    MAX_KEY_POINT=400;
+    match_index=np.zeros((MAX_KEY_POINT,len(KP_DES)),dtype=np.int8)
+    bf = cv2.BFMatcher(cv2.NORM_L1, crossCheck=True)
+    for i in range(len(KP_DES)-1):
+        matches = bf.match(KP_DES[i][1],KP_DES[i+1][1])
+            
+        
+
+
+for i in range(1,199,2):
     
+    #frame stacked over here
+    FRAME=[]
+    KP_DES=[]       #this is key point descriptor contains (kp,des) for each frame 
+    #considering 3 frame at a time
+    for fno in range(i,i+3):
+        file_name=get_name(fno)
+        frame=cv2.imread("Test001/"+file_name);
+        FRAME.append(frame);
+        
+        sift = cv2.xfeatures2d.SIFT_create()
+        #compute descriptor and keypoint
+        kp,des = sift.detectAndCompute(frame,None)
+        KP_DES.append((kp,des));
+        display_keypoint_in_image(frame,KP_DES[fno-i][0])
+  
+
     
-    print len(kp)
-    display_keypoint_in_image(frame1,kp)
+    #match key point
+    #here I have used brute force method
+    bf = cv2.BFMatcher(cv2.NORM_L1, crossCheck=True)
+    matches = bf.match(KP_DES[0][1],KP_DES[1][1])
+    matches = sorted(matches,key = lambda x:x.distance)
+    
+
+
+    frame0 = cv2.drawMatches(FRAME[0],KP_DES[0][0],FRAME[1],KP_DES[1][0],matches[-50:-1],None,flags=2)
+    #plt.imshow(frame0),plt.show(1)
+    display_image(frame0);
+    
+
+
+ 
+
+
+
+
+
 
 
