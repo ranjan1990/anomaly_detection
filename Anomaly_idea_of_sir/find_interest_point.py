@@ -48,21 +48,14 @@ def display_keypoint_in_image(frame,kp):
     cv2.drawKeypoints(frame,kp,frame,flags=cv2.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS)
     frame_dis= cv2.resize(frame, (714,474))
     cv2.imshow("keypoint",frame_dis)
-    cv2.waitKey(1);
+    cv2.waitKey(50);
 
 
 def display_image(frame):
     cv2.imshow("frame",frame)
-    cv2.waitKey(1);
+    cv2.waitKey(0);
 
 
-""" 
-    #detect key point wih mask
-    M=np.zeros(frame1.shape[:-1],dtype=np.uint8)
-    Mask_with_one(M,(5,5),(i1,j1))   
-    sift = cv2.xfeatures2d.SIFT_create()
-    kp = sift.detect(frame1,M)
-"""   
 def key_cor(kp1,ind1,kp2,ind2):
     print kp1[ind1].pt
     #print kp2[ind2].pt
@@ -80,11 +73,12 @@ def get_traj_matrix(KP_DES):
         matches = bf.match(KP_DES[i][1],KP_DES[i+1][1])
         matches = sorted(matches,key = lambda x:x.distance)
         
+
         for m in matches:
             #match_index[m.trainIdx][i]=m.queryIdx
             #for all matches storre it into matrix ith col indicates the 
-            #if(m.distance<100):
-            match_index[m.queryIdx][i]=m.trainIdx
+            if(m.distance<200):
+                match_index[m.queryIdx][i]=m.trainIdx
     return match_index
 
 
@@ -100,8 +94,18 @@ def traverse_matrix(mat,KP_DES):
             else:
                 break;
 
+#image show with normal window
+def imshow1(frame):
+    cv2.namedWindow('image', cv2.WINDOW_NORMAL)
+    cv2.imshow("image",frame);
+    cv2.waitKey(0)
 
-
+#image show uning matplot
+def imshow(img):
+    from matplotlib import pyplot as plt
+    plt.imshow(img, cmap = 'gray', interpolation = 'bicubic')
+    plt.xticks([]), plt.yticks([])  # to hide tick values on X and Y axis
+    plt.show()
 
 
 
@@ -120,7 +124,7 @@ for i in range(1,199,1500):
         #compute descriptor and keypoint
         kp,des = sift.detectAndCompute(frame,None)
         KP_DES.append((kp,des));
-        #display_keypoint_in_image(frame,KP_DES[fno-i][0])
+        display_keypoint_in_image(frame,KP_DES[fno-i][0])
           
         
     
