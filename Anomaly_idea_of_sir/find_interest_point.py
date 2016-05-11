@@ -110,10 +110,10 @@ def imshow(img):
 
 
 for i in range(1,199,1500):
-    
     #frame stacked over here
     FRAME=[]
     KP_DES=[]       #this is key point descriptor contains (kp,des) for each frame 
+    
     #considering 3 frame at a time
     for fno in range(i,i+100):
         file_name=get_name(fno)
