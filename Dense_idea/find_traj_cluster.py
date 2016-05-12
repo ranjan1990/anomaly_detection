@@ -1,9 +1,9 @@
 import os
 
-file_name="/home/ranjan/Kaggle/dense_tracker_ECCV10/moseg/data/UCSD_Anomaly/UCSDped1/Test/Test001/BroxMalikResults/Tracks200.dat"
+file_name="/home/ranjan/Kaggle/dense_tracker_ECCV10/moseg/data/UCSD_Anomaly/UCSDped2/Test/Test001/BroxMalikResults/Tracks180.dat"
 
 #dir to store  individual cluster trajectory 
-dir1=file_name.split("/")[-3]+"_cluster_traj"
+dir1=file_name.split("/")[-3]+"_cluster_traj2"
 try:
         os.stat(dir1)
 except:
@@ -25,7 +25,6 @@ while(line!=""):
         D[t_label]=1;
 
     f1=open(dir1+"/"+str(t_label),"a")
-    print t_label
     for i in range(t_no):
         line=f.readline();
         f1.write(line);
@@ -34,4 +33,4 @@ while(line!=""):
     f1.close()
     line=f.readline()
 
-
+print D
