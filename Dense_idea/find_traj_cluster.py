@@ -1,13 +1,20 @@
 import os
+import sys
 
-file_name="/home/ranjan/Kaggle/dense_tracker_ECCV10/moseg/data/UCSD_Anomaly/UCSDped2/Test/Test001/BroxMalikResults/Tracks180.dat"
+#file_name="/home/ranjan/Kaggle/dense_tracker_ECCV10/moseg/data/UCSD_Anomaly/UCSDped1/Test/Test003/BroxMalikResults/Tracks200.dat"
 
 #dir to store  individual cluster trajectory 
-dir1=file_name.split("/")[-3]+"_cluster_traj2"
+dir1="result_"+sys.argv[1].partition("data/")[-1]
+file_name=sys.argv[1]+"/BroxMalikResults/Tracks200.dat"
+
 try:
         os.stat(dir1)
+        
 except:
-        os.mkdir(dir1)       
+        os.makedirs(dir1)       
+
+
+
 
 
 f=open(file_name,"r");
