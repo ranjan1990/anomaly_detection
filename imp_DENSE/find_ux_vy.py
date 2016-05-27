@@ -1,6 +1,8 @@
 import os
 import numpy as np
 import cv2
+import matplotlib.pyplot as plt
+
 #src_dir="/home/ranjan/Kaggle/dense_tracker_ECCV10/moseg/data/UCSD_Anomaly/UCSDped2/Train_block/"
 src_dir="/media/ranjan/PART-EXT1/anomaly_detection_data/UCSD_Anomaly/UCSDped2/Train_block/"
 DIR_L=os.listdir(src_dir)
@@ -66,8 +68,14 @@ def ux_vy1(L):
     for i in range(len(L)-1):
         L1.append( L[i+1]-L[i])
         l=L[i+1]-L[i]
-        print l
+        print l[0],l[1]
     L1=np.array(L1);
+    if(len(L1)>10):
+        plt.plot(L1[:,0], L1[:,1], 'ro')
+        #plt.show()
+        plt.pause(0.0001)
+    
+    #print L1
     print "-----"
 
 
@@ -97,7 +105,7 @@ def variance(L):
 
 blk_no=0
 D={}
-DIR_L=["2178_5x5.txt"]
+DIR_L=["0_5x5.txt"]
 
 for l in DIR_L:
     file1=src_dir+l
