@@ -8,7 +8,7 @@ DIR_L.sort()
 #converts string list to  numpy float64 array 
 def convert_List(L):
     L1=[]
-    
+
     for i in range(0,len(L),2):
         l=L[i];
         l=l.replace("\n","")
@@ -16,15 +16,15 @@ def convert_List(L):
         l=l.replace(")","")
         l=l.split(",");
         L1.append((float(l[0]),float(l[1])))
-    
+
     l=L[-1]
     l=l.replace("\n","")
     l=l.replace("(","")
     l=l.replace(")","")
     l=l.split(","); 
     L1.append((float(l[0]),float(l[1])))
-    
-    
+
+
     L1=np.array(L1);
     return(L1)
 
@@ -45,6 +45,8 @@ def ux_vy(L,D):
         L1.append( L[i+1]-L[i])
 
     L1=np.array(L1);
+
+
     avg_diff=np.sum(L1,axis=0)/len(L)
     if(abs(np.sum(avg_diff))>0.1):
         #print avg_diff  
@@ -54,7 +56,32 @@ def ux_vy(L,D):
         #print "-"
         D=dict(D,blk_no,-1)
     return(L1,D)
-    
+
+
+
+
+#find difference of vectors
+def ux_vy1(L):
+    L1=[]
+    for i in range(len(L)-1):
+        L1.append( L[i+1]-L[i])
+        l=L[i+1]-L[i]
+        print l
+    L1=np.array(L1);
+    print "-----"
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -65,11 +92,12 @@ def ux_vy(L,D):
 def variance(L):
     if(len(L)>15):
         print np.var(L)
-    
+
 
 
 blk_no=0
 D={}
+DIR_L=["2178_5x5.txt"]
 
 for l in DIR_L:
     file1=src_dir+l
@@ -93,7 +121,8 @@ for l in DIR_L:
             #each trajectory in a block
             if(flag==0):
                 L=convert_List(L)       #convert L into numpy
-                L_uv,D=ux_vy(L,D)
+                #L_uv,D=ux_vy(L,D)
+                ux_vy1(L)
                                    
 
                 #set L to blanck so that it can consider next trajectory
@@ -104,6 +133,8 @@ for l in DIR_L:
             flag=1;
             
         s=f1.readline();
+        
+    exit()
     #print "------",l,"-------------" 
 
 
@@ -114,8 +145,6 @@ IMAGE_SIZE_X=360
 IMAGE_SIZE_Y=240
 
 img=cv2.imread("/media/ranjan/PART-EXT1/anomaly_detection_data/UCSD_Anomaly/UCSDped2/Train/Train001/001.tif")
-
-
 
 print D
 
