@@ -105,7 +105,7 @@ def variance(L):
 
 blk_no=0
 D={}
-DIR_L=["0_5x5.txt"]
+DIR_L=["1972_5x5.txt"]
 
 for l in DIR_L:
     file1=src_dir+l
@@ -155,6 +155,16 @@ IMAGE_SIZE_Y=240
 img=cv2.imread("/media/ranjan/PART-EXT1/anomaly_detection_data/UCSD_Anomaly/UCSDped2/Train/Train001/001.tif")
 
 print D
+
+
+def find_xy(d):
+    x=int(d/(IMAGE_SIZE_X/BLOCK_SIZE_X))
+    y=d%(IMAGE_SIZE_X/BLOCK_SIZE_X)
+    x=x*5
+    y=y*5
+    return((x,y)) 
+
+
 
 
 for d in D:
