@@ -4,6 +4,8 @@ import cv2
 import matplotlib.pyplot as plt
 
 #src_dir="/home/ranjan/Kaggle/dense_tracker_ECCV10/moseg/data/UCSD_Anomaly/UCSDped2/Train_block/"
+
+
 src_dir="/media/ranjan/PART-EXT1/anomaly_detection_data/UCSD_Anomaly/UCSDped2/Train_block/"
 DIR_L=os.listdir(src_dir)
 DIR_L.sort()
