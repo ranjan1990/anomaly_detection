@@ -13,28 +13,33 @@ dest_folder="/media/ranjan/PART-EXT1/anomaly_detection_data/UCSD_Anomaly/UCSDped
 
 L=os.listdir(src_folder)
 print L
-BLOCK_SIZE_X=5
-BLOCK_SIZE_Y=5
+BLOCK_SIZE_X=7
+BLOCK_SIZE_Y=4
 
 IMAGE_SIZE_X=360    #number of pixel along horizontal direction i.e number  of col
 IMAGE_SIZE_Y=240    #number of pixel along vertical direction i.e number of row
+NUM_BLOCK_X=IMAGE_SIZE_X/BLOCK_SIZE_X
+NUM_BLOCK_Y=IMAGE_SIZE_Y/BLOCK_SIZE_Y
 
 
 
 #for each block we have a file and for each file we have a file descriptor
 #open file descriptor row wise  and return list
 def initialize():
+    """
     if(IMAGE_SIZE_X%BLOCK_SIZE_X!=0):
         print "try different block size"
         exit();
     if(IMAGE_SIZE_Y%BLOCK_SIZE_Y!=0):
         print "try different block size"
         exit();
+    """
+
+    list_length=NUM_BLOCK_Y*NUM_BLOCK_X
     
-    list_length=IMAGE_SIZE_X*IMAGE_SIZE_Y/(BLOCK_SIZE_X*BLOCK_SIZE_Y);
     L=[]
     for l in range(list_length):
-        f=open(dest_folder+str(l)+"_5x5.txt","w")
+        f=open(dest_folder+str(l)+"_"+str(BLOCK_SIZE_Y)+"x"+str(BLOCK_SIZE_X)+".txt","w")
         L.append(f);
 
 
@@ -50,19 +55,20 @@ def close_file(L):
 
 
 
-#from the (x,y) chose a  block i.e file descriptor and return position in the list.row wise
+#from the (x,y) chose a  block i.e file descriptor and return position in the list.row wise (x,y)= image cordinate
 def decide_file_des((x,y)):
-    i=x/BLOCK_SIZE_X
-    j=y/BLOCK_SIZE_Y
+    
+    i=x/BLOCK_SIZE_Y
+    j=y/BLOCK_SIZE_X
     i=int(i)
     j=int(j)
 
-
-    num_block_in_row=IMAGE_SIZE_X/BLOCK_SIZE_X
-    
     #position of file des in a list
-    pos_file_des=num_block_in_row*i+j
-    return(int(pos_file_des));
+    pos_file_des=NUM_BLOCK_X*i+j
+    if(i>=NUM_BLOCK_X or j>=NUM_BLOCK_Y):   #as block number starts from 0;
+        return(-1);
+    else:
+        return(int(pos_file_des));
 
 
 #return ((112.000000,2.000000),(112.009262,1.956928)) from -> '(112.000000,2.000000),(112.009262,1.956928) \t \n' 
@@ -92,10 +98,6 @@ def process_line(s):
 
 
 
-
-
-
-
 file_des_list=initialize()
 
 for l in L:
@@ -111,8 +113,11 @@ for l in L:
         if(s.find("---")==-1):
             (p1,p2)=process_line(s)     
             new_block_num=decide_file_des(p1)
+            if(new_block_num==-1):
+                continue;
 
-            #print new_block_num,p1
+            #print new_block_num,p1 
+            #if 
             if(new_block_num!=old_block_num):
                 #print "DBG",new_block_num
                 f1=file_des_list[new_block_num];
@@ -138,7 +143,7 @@ for l in L:
         i=i+1
  
     f_file1.close()
-    
+    exit() 
 
 close_file(file_des_list);
 
