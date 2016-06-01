@@ -114,6 +114,7 @@ for l in L:
             (p1,p2)=process_line(s)     
             new_block_num=decide_file_des(p1)
             if(new_block_num==-1):
+                s=f_file1.readline();
                 continue;
 
             #print new_block_num,p1 
@@ -126,6 +127,7 @@ for l in L:
             f=file_des_list[new_block_num];
             f.write(str(p1)+"\n")
             f.write(str(p2)+"\n")
+            print p1
             old_block_num=new_block_num;
     
 
