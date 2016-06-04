@@ -57,18 +57,22 @@ def close_file(L):
 
 #from the (x,y) chose a  block i.e file descriptor and return position in the list.row wise (x,y)= image cordinate
 def decide_file_des((x,y)):
-    
     i=x/BLOCK_SIZE_Y
     j=y/BLOCK_SIZE_X
+
+
     i=int(i)
     j=int(j)
 
     #position of file des in a list
     pos_file_des=NUM_BLOCK_X*i+j
-    if(i>=NUM_BLOCK_X or j>=NUM_BLOCK_Y):   #as block number starts from 0;
+
+    #as block number starts from 0; and i denote along the Y direction and j ->x .
+    if(i>=NUM_BLOCK_Y or j>=NUM_BLOCK_X):  
         return(-1);
     else:
         return(int(pos_file_des));
+
 
 
 #return ((112.000000,2.000000),(112.009262,1.956928)) from -> '(112.000000,2.000000),(112.009262,1.956928) \t \n' 
@@ -113,6 +117,8 @@ for l in L:
         if(s.find("---")==-1):
             (p1,p2)=process_line(s)     
             new_block_num=decide_file_des(p1)
+
+
             if(new_block_num==-1):
                 s=f_file1.readline();
                 continue;
@@ -127,7 +133,7 @@ for l in L:
             f=file_des_list[new_block_num];
             f.write(str(p1)+"\n")
             f.write(str(p2)+"\n")
-            print p1
+            
             old_block_num=new_block_num;
     
 
