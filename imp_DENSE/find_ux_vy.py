@@ -70,14 +70,22 @@ def ux_vy1(L):
     for i in range(len(L)-1):
         L1.append( L[i+1]-L[i])
         l=L[i+1]-L[i]
-        print l[0],l[1]
+        #print l[0],l[1]
     L1=np.array(L1);
     if(len(L1)>10):
-        plt.plot(L1[:,0], L1[:,1], 'ro')
+        #plt.plot(L1[:,0], L1[:,1], 'ro')
         #plt.show()
-        plt.pause(0.0001)
+        #plt.pause(0.0001)
+        pass 
+
     
     #print L1
+    #print np.sum(np.std(L1,axis=0)),len(L)
+    if(len(L)>5):
+        plt.plot(np.std(L1,axis=0)[0],np.std(L1,axis=0)[1], 'ro')
+        print    np.std(L1,axis=0)[0],np.std(L1,axis=0)[1]
+        plt.pause(0.0000001)
+
     print "-----"
 
 
@@ -107,7 +115,7 @@ def variance(L):
 
 blk_no=0
 D={}
-DIR_L=["1972_5x5.txt"]
+DIR_L=["1487_4x7.txt"]
 
 for l in DIR_L:
     file1=src_dir+l
@@ -133,13 +141,12 @@ for l in DIR_L:
                 L=convert_List(L)       #convert L into numpy
                 #L_uv,D=ux_vy(L,D)
                 ux_vy1(L)
-                                   
+                #print L;                   
 
                 #set L to blanck so that it can consider next trajectory
                 L=[]
 
-
-
+                
             flag=1;
             
         s=f1.readline();
@@ -147,23 +154,29 @@ for l in DIR_L:
     exit()
     #print "------",l,"-------------" 
 
+BLOCK_SIZE_X=7
+BLOCK_SIZE_Y=4
+
+IMAGE_SIZE_X=360    #number of pixel along horizontal direction i.e number  of col
+IMAGE_SIZE_Y=240    #number of pixel along vertical direction i.e number of row
+NUM_BLOCK_X=IMAGE_SIZE_X/BLOCK_SIZE_X
+NUM_BLOCK_Y=IMAGE_SIZE_Y/BLOCK_SIZE_Y
 
 
-BLOCK_SIZE_X=5
-BLOCK_SIZE_Y=5
-IMAGE_SIZE_X=360
-IMAGE_SIZE_Y=240
 
 img=cv2.imread("/media/ranjan/PART-EXT1/anomaly_detection_data/UCSD_Anomaly/UCSDped2/Train/Train001/001.tif")
 
-print D
+#print D
 
 
+
+#it find the image coordinate(not geometric coordinate) from the block number 
 def find_xy(d):
     x=int(d/(IMAGE_SIZE_X/BLOCK_SIZE_X))
     y=d%(IMAGE_SIZE_X/BLOCK_SIZE_X)
-    x=x*5
-    y=y*5
+    x=x*BLOCK_SIZE_Y
+    y=y*BLOCK_SIZE_X
+
     return((x,y)) 
 
 
