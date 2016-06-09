@@ -107,6 +107,7 @@ def ux_vy1(L):
 
 
 
+
 def variance(L):
     if(len(L)>15):
         print np.var(L)
